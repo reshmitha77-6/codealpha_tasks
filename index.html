@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitTrack Pro | CodeAlpha Fitness Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #f4f7fb;
+      --card: rgba(255, 255, 255, 0.9);
+      --text: #172033;
+      --muted: #68738a;
+      --primary: #22c55e;
+      --primary-dark: #16a34a;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --blue: #3b82f6;
+      --shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+      --radius: 22px;
+    }
+
+    body.dark {
+      --bg: #07111f;
+      --card: rgba(15, 23, 42, 0.88);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 197, 94, 0.22), transparent 32%),
+        radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.22), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      padding: 28px;
+      transition: 0.3s ease;
+    }
+
+    .app {
+      width: min(1150px, 100%);
+      margin: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .brand h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: -1.4px;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .brand p {
+      color: var(--muted);
+      margin-top: 8px;
+      max-width: 650px;
+      line-height: 1.6;
+    }
+
+    .toggle {
+      border: 0;
+      background: var(--card);
+      color: var(--text);
+      padding: 13px 16px;
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      padding: 24px;
+    }
+
+    .form-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .badge {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--primary-dark);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-weight: 650;
+      margin: 14px 0 7px;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      color: #172033;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    body.dark input,
+    body.dark select {
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .primary-btn, .secondary-btn, .danger-btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .primary-btn {
+      width: 100%;
+      margin-top: 18px;
+      background: linear-gradient(135deg, var(--primary), #14b8a6);
+      color: white;
+    }
+
+    .primary-btn:hover, .secondary-btn:hover, .danger-btn:hover, .toggle:hover {
+      transform: translateY(-2px);
+    }
+
+    .secondary-btn {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--blue);
+    }
+
+    .danger-btn {
+      background: rgba(239, 68, 68, 0.13);
+      color: var(--danger);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    body.dark .stat-box {
+      background: rgba(30, 41, 59, 0.55);
+    }
+
+    .stat-box p {
+      color: var(--muted);
+      font-size: 0.87rem;
+      font-weight: 700;
+    }
+
+    .stat-box h2 {
+      margin-top: 8px;
+      font-size: 1.8rem;
+    }
+
+    .goal-card {
+      margin-bottom: 22px;
+    }
+
+    .goal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 18px;
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #14b8a6, #3b82f6);
+      border-radius: 999px;
+      transition: width 0.45s ease;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 32px 10px;
+      border: 2px dashed rgba(148, 163, 184, 0.35);
+      border-radius: 18px;
+    }
+
+    .workout-list {
+      display: grid;
+      gap: 12px;
+      max-height: 365px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .workout-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    body.dark .workout-item {
+      background: rgba(30, 41, 59, 0.55);
+    }
+
+    .workout-item h4 {
+      margin-bottom: 5px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .delete {
+      border: 0;
+      background: rgba(239, 68, 68, 0.13);
+      color: var(--danger);
+      padding: 9px 11px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 22px;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 880px) {
+      .grid, .stats, .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <h1>FitTrack <span>Pro</span></h1>
+        <p>A responsive fitness tracker web app with calorie goal progress, workout history, local storage, activity categories, BMI calculator, dark mode, and export options.</p>
+      </div>
+      <button class="toggle" id="themeToggle">🌙 Dark Mode</button>
+    </header>
+
+    <section class="grid">
+      <div class="card">
+        <div class="form-title">
+          <h2>Add Workout</h2>
+          <span class="badge">CodeAlpha Project</span>
+        </div>
+
+        <label for="exercise">Exercise Name</label>
+        <input type="text" id="exercise" placeholder="Example: Running" />
+
+        <div class="two-col">
+          <div>
+            <label for="category">Category</label>
+            <select id="category">
+              <option value="Cardio">Cardio</option>
+              <option value="Strength">Strength</option>
+              <option value="Yoga">Yoga</option>
+              <option value="Sports">Sports</option>
+              <option value="Walking">Walking</option>
+            </select>
+          </div>
+          <div>
+            <label for="duration">Duration</label>
+            <input type="number" id="duration" placeholder="Minutes" min="1" />
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div>
+            <label for="calories">Calories Burned</label>
+            <input type="number" id="calories" placeholder="Example: 250" min="1" />
+          </div>
+          <div>
+            <label for="goal">Daily Goal</label>
+            <input type="number" id="goal" placeholder="Goal" min="100" />
+          </div>
+        </div>
+
+        <button class="primary-btn" id="addBtn">+ Add Workout</button>
+
+        <hr style="border:0;border-top:1px solid rgba(148,163,184,.25);margin:24px 0;" />
+
+        <h2>BMI Calculator</h2>
+        <div class="two-col">
+          <div>
+            <label for="height">Height</label>
+            <input type="number" id="height" placeholder="cm" min="1" />
+          </div>
+          <div>
+            <label for="weight">Weight</label>
+            <input type="number" id="weight" placeholder="kg" min="1" />
+          </div>
+        </div>
+        <button class="primary-btn" id="bmiBtn">Calculate BMI</button>
+        <p id="bmiResult" class="meta" style="margin-top:12px;"></p>
+      </div>
+
+      <div class="card">
+        <div class="stats">
+          <div class="stat-box">
+            <p>Total Calories</p>
+            <h2 id="totalCalories">0</h2>
+          </div>
+          <div class="stat-box">
+            <p>Total Workouts</p>
+            <h2 id="totalWorkouts">0</h2>
+          </div>
+          <div class="stat-box">
+            <p>Total Minutes</p>
+            <h2 id="totalMinutes">0</h2>
+          </div>
+          <div class="stat-box">
+            <p>Best Burn</p>
+            <h2 id="bestBurn">0</h2>
+          </div>
+        </div>
+
+        <div class="goal-card">
+          <div class="goal-head">
+            <span>Daily Calorie Goal Progress</span>
+            <span id="goalText">0%</span>
+          </div>
+          <div class="progress"><div class="bar" id="progressBar"></div></div>
+        </div>
+
+        <div class="toolbar">
+          <h2>Workout History</h2>
+          <div>
+            <button class="secondary-btn" id="exportBtn">Export CSV</button>
+            <button class="danger-btn" id="clearBtn">Clear All</button>
+          </div>
+        </div>
+
+        <div id="workoutList" class="workout-list"></div>
+      </div>
+    </section>
+
+    <footer>Built with HTML, CSS, JavaScript and LocalStorage | FitTrack Pro</footer>
+  </main>
+
+  <script>
+    const exerciseInput = document.getElementById("exercise");
+    const categoryInput = document.getElementById("category");
+    const durationInput = document.getElementById("duration");
+    const caloriesInput = document.getElementById("calories");
+    const goalInput = document.getElementById("goal");
+    const workoutList = document.getElementById("workoutList");
+    const progressBar = document.getElementById("progressBar");
+    const goalText = document.getElementById("goalText");
+
+    let workouts = JSON.parse(localStorage.getItem("fittrack_workouts")) || [];
+    let dailyGoal = Number(localStorage.getItem("fittrack_goal")) || 1000;
+    let darkMode = JSON.parse(localStorage.getItem("fittrack_dark")) || false;
+
+    goalInput.value = dailyGoal;
+    if (darkMode) document.body.classList.add("dark");
+    updateThemeButton();
+
+    document.getElementById("addBtn").addEventListener("click", addWorkout);
+    document.getElementById("clearBtn").addEventListener("click", clearAll);
+    document.getElementById("exportBtn").addEventListener("click", exportCSV);
+    document.getElementById("bmiBtn").addEventListener("click", calculateBMI);
+    document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+
+    function saveData() {
+      localStorage.setItem("fittrack_workouts", JSON.stringify(workouts));
+      localStorage.setItem("fittrack_goal", dailyGoal);
+    }
+
+    function addWorkout() {
+      const exercise = exerciseInput.value.trim();
+      const category = categoryInput.value;
+      const duration = Number(durationInput.value);
+      const calories = Number(caloriesInput.value);
+      const goal = Number(goalInput.value);
+
+      if (!exercise || duration <= 0 || calories <= 0 || goal <= 0) {
+        alert("Please enter valid workout details.");
+        return;
+      }
+
+      dailyGoal = goal;
+      workouts.unshift({
+        id: Date.now(),
+        exercise,
+        category,
+        duration,
+        calories,
+        date: new Date().toLocaleDateString()
+      });
+
+      exerciseInput.value = "";
+      durationInput.value = "";
+      caloriesInput.value = "";
+      saveData();
+      render();
+    }
+
+    function render() {
+      const totalCalories = workouts.reduce((sum, item) => sum + item.calories, 0);
+      const totalMinutes = workouts.reduce((sum, item) => sum + item.duration, 0);
+      const bestBurn = workouts.length ? Math.max(...workouts.map(item => item.calories)) : 0;
+      const percentage = Math.min((totalCalories / dailyGoal) * 100, 100);
+
+      document.getElementById("totalCalories").textContent = totalCalories;
+      document.getElementById("totalWorkouts").textContent = workouts.length;
+      document.getElementById("totalMinutes").textContent = totalMinutes;
+      document.getElementById("bestBurn").textContent = bestBurn;
+      progressBar.style.width = `${percentage}%`;
+      goalText.textContent = `${Math.round(percentage)}% of ${dailyGoal} cal`;
+
+      if (workouts.length === 0) {
+        workoutList.innerHTML = `<div class="empty">No workouts added yet. Start tracking your fitness journey today 💪</div>`;
+        return;
+      }
+
+      workoutList.innerHTML = workouts.map(item => `
+        <div class="workout-item">
+          <div>
+            <h4>${escapeHTML(item.exercise)}</h4>
+            <p class="meta">${item.category} • ${item.duration} min • ${item.calories} cal • ${item.date}</p>
+          </div>
+          <button class="delete" onclick="deleteWorkout(${item.id})">Delete</button>
+        </div>
+      `).join("");
+    }
+
+    function deleteWorkout(id) {
+      workouts = workouts.filter(item => item.id !== id);
+      saveData();
+      render();
+    }
+
+    function clearAll() {
+      if (workouts.length === 0) return;
+      if (confirm("Are you sure you want to clear all workouts?")) {
+        workouts = [];
+        saveData();
+        render();
+      }
+    }
+
+    function calculateBMI() {
+      const height = Number(document.getElementById("height").value) / 100;
+      const weight = Number(document.getElementById("weight").value);
+      const result = document.getElementById("bmiResult");
+
+      if (height <= 0 || weight <= 0) {
+        result.textContent = "Please enter valid height and weight.";
+        return;
+      }
+
+      const bmi = weight / (height * height);
+      let status = "Healthy range";
+      if (bmi < 18.5) status = "Below healthy range";
+      else if (bmi >= 25) status = "Above healthy range";
+
+      result.textContent = `Your BMI is ${bmi.toFixed(1)} — ${status}.`;
+    }
+
+    function exportCSV() {
+      if (workouts.length === 0) {
+        alert("No data to export.");
+        return;
+      }
+
+      const header = "Exercise,Category,Duration,Calories,Date\n";
+      const rows = workouts.map(item =>
+        `"${item.exercise}","${item.category}",${item.duration},${item.calories},"${item.date}"`
+      ).join("\n");
+
+      const blob = new Blob([header + rows], { type: "text/csv" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "fittrack-workouts.csv";
+      link.click();
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+      darkMode = document.body.classList.contains("dark");
+      localStorage.setItem("fittrack_dark", JSON.stringify(darkMode));
+      updateThemeButton();
+    }
+
+    function updateThemeButton() {
+      document.getElementById("themeToggle").textContent = document.body.classList.contains("dark")
+        ? "☀️ Light Mode"
+        : "🌙 Dark Mode";
+    }
+
+    function escapeHTML(text) {
+      const div = document.createElement("div");
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    render();
+  </script>
+</body>
+</html>
